@@ -75,6 +75,11 @@ pub(crate) struct BuildArgs {
     #[options(meta = "PATH", parse(try_from_str = "IPL3::read_from_rom"))]
     pub(crate) ipl3_from_rom: Option<IPL3>,
 
+    /// Maximum binary size that is allowed in bytes. The default is 1 * 1024 * 1024. Anything higher
+    /// than that needs to take care of loading into RAM itself
+    #[options()]
+    pub(crate) maximum_binary_size: Option<usize>,
+
     /// All remaining arguments will be passed directly to cargo
     #[options(free)]
     pub(crate) rest: Vec<String>,

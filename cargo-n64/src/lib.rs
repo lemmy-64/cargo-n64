@@ -45,7 +45,7 @@ pub enum BuildError {
     #[error("Error while creating filesystem")]
     FSError(#[from] FSError),
 
-    #[error("Elf program is larger than 1MB")]
+    #[error("Elf program is larger than allowed. Consider increasing via --maximum-binary-size, but make sure to load anything above 1 MB manually")]
     ProgramTooBigError,
 
     #[error("Empty filename")]
@@ -128,7 +128,7 @@ fn build(mut args: BuildArgs, verbose: usize) -> Result<(), BuildError> {
     let (entry_point, program) = elf::dump(&filename)?;
 
     // XXX: See https://github.com/rust-console/cargo-n64/issues/40
-    if program.len() > 1024 * 1024 {
+    if program.len() > args.maximum_binary_size.unwrap_or(1 * 1024 * 1024) {
         return Err(ProgramTooBigError);
     }
 
